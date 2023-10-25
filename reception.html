@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+       <title>reception</title>
+    </head>
+    <body>
+       <h1>reception</h1>
+       <form id="frm-reception">
+         <p>チーム1<input type="text" id="teamname1"></p>
+         <p>チーム2<input type="text" id="teamname2"></p>
+         <p>チーム3<input type="text" id="teamname3"></p>
+         <button id="btn">送信</button>
+       </form>
+       <script src="/socket.io/socket.io.js"></script>
+       <script>
+  //-------------------------------------
+  // Socket.ioサーバへ接続
+  //-------------------------------------
+  const socket = io();
+  /**
+   * [イベント] フォームが送信された
+   */
+  document.querySelector("#frm-reception").addEventListener("submit", (e)=>{
+    // 規定の送信処理をキャンセル(画面遷移しないなど)
+    e.preventDefault();
+
+    // 入力内容を取得する
+    const msg1 = document.querySelector("#teamname1");
+    const msg2 = document.querySelector("#teamname2");
+    const msg3 = document.querySelector("#teamname3");
+    if( msg1.value === "" ||msg2.value === "" || msg3.value === ""){
+      return(false);
+    }
+    
+    // Socket.ioサーバへ送信
+    socket.emit("reception", {text1: msg1.value,text2: msg2.value, text3:msg3.value});
+
+    // 送信フォームを空にする
+    msg1.value = "";
+    msg2.value = "";
+    msg3.value = "";
+  });
+
+  /**
+   * [イベント] イベントが起こる
+   */
+  // ここにビデオの切り替えを書く
+//   socket.on("member-post", (msg)=>{
+//     if (msg.text=="start"){
+//       document.getElementById("videocontent").innerHTML="<p>ビデオ："+msg.text+"</p>";
+//       document.getElementById("audiocontent").innerHTML="音声なし";
+//     }else if (msg.text=="three teams finished" || msg.text=="gameover"){
+//       document.getElementById("videocontent").innerHTML="<p>ビデオ："+msg.text+"</p>";
+//     }else{
+//       document.getElementById("audiocontent").innerHTML="<p>音声："+msg.text+"</p>";
+//     }
+    
+//   });
+
+  /**
+   * [イベント] ページの読込み完了
+   */
+  window.onload = ()=>{
+    // テキストボックスを選択する
+    document.querySelector("#msg1").focus();
+  }
+       </script>
+    </body>
+</html>
